@@ -9,6 +9,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 $source = Read-Host "Please enter the source directory for the Users data: (ex. d:\users\jdoe)"
 $destination = Read-Host "Please enter the destination directory to store the Users data: (ex. c:\usr\jdoe)"
 $pwd = 'c:\temp'
+mkdir $pwd
 
 #Starts Robocopy to transfer all attributes, copies timestamps to destination, and outputs a log to the working directory.
-robocopy $source $destination /E /ZB /DCOPY:T /COPYALL /MT:128 /R:1 /W:1 /V /TEE /LOG:$pwd\Robocopy.log
+robocopy $source $destination /XD 'AppData' 'Application Data' /E /ZB /DCOPY:T /COPYALL /MT:128 /R:0 /W:0 /V /TEE /LOG:$pwd\Robocopy.log
