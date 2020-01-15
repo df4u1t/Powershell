@@ -16,10 +16,16 @@ mkdir $pwd
 
 #Starts Robocopy to transfer all attributes, copies timestamps to destination, and outputs a log to the working directory.
 robocopy $source $destination /XD 'AppData' 'Application Data' /E /ZB /DCOPY:T /COPYALL /MT:128 /R:0 /W:0 /V /TEE /LOG:$pwd\Robocopy.log
-robocopy $source $destination + '\AppData\Local\Google' /E /ZB /DCOPY:T /COPYALL /MT:128 /R:0 /W:0 /V /TEE /LOG:$pwd\Robocopy.log
-robocopy $source $destination + '\AppData\Local\Microsoft\Office' /E /ZB /DCOPY:T /COPYALL /MT:128 /R:0 /W:0 /V /TEE /LOG:$pwd\Robocopy.log
-robocopy $source $destination + '\AppData\Local\Microsoft\Outlook' /E /ZB /DCOPY:T /COPYALL /MT:128 /R:0 /W:0 /V /TEE /LOG:$pwd\Robocopy.log
-robocopy $source $destination + '\AppData\Roaming\Microsoft\Windows\Themes' /E /ZB /DCOPY:T /COPYALL /MT:128 /R:0 /W:0 /V /TEE /LOG:$pwd\Robocopy.log
+wait-process -name "robocopy.exe"
+robocopy $source + '\AppData\Local\Google' $destination + '\AppData\Local\Google' /E /ZB /DCOPY:T /COPYALL /MT:128 /R:0 /W:0 /V /TEE /LOG:$pwd\Robocopy.log
+wait-process -name "robocopy.exe"
+robocopy $source + '\AppData\Local\Microsoft\Office' $destination + '\AppData\Local\Microsoft\Office' /E /ZB /DCOPY:T /COPYALL /MT:128 /R:0 /W:0 /V /TEE /LOG:$pwd\Robocopy.log
+wait-process -name "robocopy.exe"
+robocopy $source + '\AppData\Local\Microsoft\Outlook' $destination + '\AppData\Local\Microsoft\Outlook' /E /ZB /DCOPY:T /COPYALL /MT:128 /R:0 /W:0 /V /TEE /LOG:$pwd\Robocopy.log
+wait-process -name "robocopy.exe"
+robocopy $source + '\AppData\Roaming\Microsoft\Windows\Themes' $destination + '\AppData\Roaming\Microsoft\Windows\Themes' /E /ZB /DCOPY:T /COPYALL /MT:128 /R:0 /W:0 /V /TEE /LOG:$pwd\Robocopy.log
+wait-process -name "robocopy.exe"
+
 $SID = Get-WmiObject -Class win32_userAccount -Filter "name = '$user'" | foreach { $_.SID }
 #reg load $regHKLM $drive + 'Windows\System32\config\SOFTWARE'
 reg export $regHKLM + '\Microsoft\Windows NT\CurrentVersion\ProfileList\' + $SID $destination + '\user.reg'
