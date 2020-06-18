@@ -18,7 +18,7 @@ Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation
 $AdobeSetup = "readerdc_en_xa_crd_install.exe"
 $ChromeSetup = "chrome_installer.exe"
 $ODTSetup = "setup.exe"
-$ODTConfig = $ODTUrl + "\install.xml"
+$ODTConfig = $ODTUrl + "\configuration-Office365-x64.xml"
 $ODTArgs = "/configure " + $ODTConfig
 $ODTPath = Join-Path -Path $ODTUrl -ChildPath $ODTSetup
 
