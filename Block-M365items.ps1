@@ -1,6 +1,6 @@
 Set-ExecutionPolicy RemoteSigned
 
-$sender = ""
+$senderdomain = ""
 $url = ""
 $hash = ""
 
@@ -9,7 +9,7 @@ Import-Module ExchangeOnlineManagement
 Connect-ExchangeOnline -ShowProgress $true
 
 ##Creates new entry for a blocked sender or domain
-New-TenantAllowBlockListItems -ListType Sender -Entries "$sender" -Block -NoExpiration
+New-TenantAllowBlockListItems -ListType Sender -Entries "$senderdomain" -Block -NoExpiration
 
 ##Creates new entry for a blocked URL
 New-TenantAllowBlockListItems -ListType URL -Entries "$url" -Block -NoExpiration
