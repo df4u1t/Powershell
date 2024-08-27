@@ -1,7 +1,8 @@
 param (
 	[switch] $MaliciousDomain,
 	[switch] $MaliciousURL,
-	[switch] $MaliciousHash
+	[switch] $MaliciousHash,
+	[switch] $SpoofedSender
 )
 
 Set-ExecutionPolicy RemoteSigned
@@ -10,22 +11,29 @@ Set-ExecutionPolicy RemoteSigned
 Import-Module ExchangeOnlineManagement
 Connect-ExchangeOnline -ShowProgress $true
 
-if ($MaliciousDomain) {
 ##Creates new entry for a blocked sender or domain
+if ($MaliciousDomain) {
 	$senderdomain = Read-Host "Please enter the malicious sender or domain."
 	New-TenantAllowBlockListItems -ListType Sender -Entries $senderdomain -Block -NoExpiration
 }
 
-if ($MaliciousURL) {
 ##Creates new entry for a blocked URL
+if ($MaliciousURL) {
 	$url = Read-Host "Please enter the malicious url."
 	New-TenantAllowBlockListItems -ListType Url -Entries $url -Block -NoExpiration
 }
 
+##Creates new entry for a blocked file hash
 if ($MaliciousHash) {
 	$hash = Read-Host "Please enter the malicious file hash."
-##Creates new entry for a blocked file hash
 	New-TenantAllowBlockListItems -ListType FileHash -Entries $hash -Block -NoExpiration
+}
+
+##Creates new entry for a spoofed sender
+if ($SpoofedSender) {
+	$spoofeduser = Read-Host "Enter the spoofed user's email address."
+	$sourcesubnet = Read-Host "Enter the source malicious subnet."
+	New-TenantAllowBlockListSpoofItems -Identity Default -Action Block -SendingInfrastructure $sourcesubnet -SpoofedUser $spoofeduser -SpoofType External
 }
 
 ##Disconnect from powershell session
