@@ -5,7 +5,9 @@ param (
 	[switch] $MaliciousTask,
 	[switch] $MaliciousService,
 	[switch] $AddNullRoute,
-	[switch] $AddFirewallRule
+	[switch] $DeleteNullRoute,
+	[switch] $AddFirewallRule,
+	[switch] $DisableFirewallRule
 )
 
 
@@ -51,9 +53,21 @@ if ($AddNullRoute) {
 	route add $nullroute 255.255.255.255 169.169.169.169 if 1
 }
 
+## Deletes the IP from the null route.
+if ($DeleteNullRoute) {
+	$nullroute = Read-Host "Enter the IP you want to delete from the null route."
+	route delete $nullroute 255.255.255.255 169.169.169.169 if 1
+}
+
 ## Creates ingress and egress Windows Firewall rules, use this option if the Firewall rules do not exist.
 if ($AddFirewallRule) {
 	$malicious_IP = Read-Host "Enter the malicious IP you wish to block."
 	New-NetFirewallRule -DisplayName "@@_Inbound_ActiveResponse" -Direction Inbound -Action Block -RemoteAddress "$malicious_IP"
 	New-NetFirewallRule -DisplayName "@@_Outbound_ActiveResponse" -Direction Outbound -Action Block -RemoteAddress "$malicious_IP"
+}
+
+## Disables the ingress and egress Windows Firewall rules for active response.
+if ($DisableFirewallRule) {
+	Set-NetFirewallRule -DisplayName "@@Inbound_ActiveResponse" -Enabled False
+	Set-NetFirewallRule -DisplayName "@@Outbound_ActiveResponse" -Enabled False
 }
