@@ -1,7 +1,7 @@
 param (
-	[string] $MaliciousDomain,
-	[string] $MaliciousURL,
-	[string] $MaliciousHash,
+	[switch] $MaliciousDomain,
+	[switch] $MaliciousURL,
+	[switch] $MaliciousHash,
 	[string] $SpoofedSender,
  	[string] $SpoofedSubnet
 )
@@ -14,17 +14,26 @@ Connect-ExchangeOnline -ShowProgress $true
 
 ##Creates new entry for a blocked sender or domain
 if ($MaliciousDomain) {
-	New-TenantAllowBlockListItems -ListType Sender -Entries $MaliciousDomain -Block -NoExpiration
+    $content = Get-Content -Path C:\Temp\domains.txt
+    foreach ($domain in $content) {
+	    New-TenantAllowBlockListItems -ListType Sender -Entries $domain -Block -NoExpiration
+    }
 }
 
 ##Creates new entry for a blocked URL
 if ($MaliciousURL) {
-	New-TenantAllowBlockListItems -ListType Url -Entries $MaliciousURL -Block -NoExpiration
+    $content = Get-Content -Path C:\Temp\urls.txt
+    foreach ($url in $content) {
+    	New-TenantAllowBlockListItems -ListType Url -Entries $url -Block -NoExpiration
+    }
 }
 
 ##Creates new entry for a blocked file hash
 if ($MaliciousHash) {
-	New-TenantAllowBlockListItems -ListType FileHash -Entries $MaliciousHash -Block -NoExpiration
+    $content = Get-Content -Path C:\Temp\hashes.txt
+    foreach ($hash in $content) {
+    	New-TenantAllowBlockListItems -ListType FileHash -Entries $hash -Block -NoExpiration
+    }
 }
 
 ##Creates new entry for a spoofed sender
@@ -33,4 +42,4 @@ if ($SpoofedSender) {
 }
 
 ##Disconnect from powershell session
-Disconnect-ExchangeOnline
+Disconnect-ExchangeOnline -Confirm $false
