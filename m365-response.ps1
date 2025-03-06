@@ -42,4 +42,4 @@ if ($SpoofedSender) {
 }
 
 ##Disconnect from powershell session
-Disconnect-ExchangeOnline -Confirm $false
+Disconnect-ExchangeOnline -Confirm:$false
